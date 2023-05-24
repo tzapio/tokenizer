@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/tiktoken-go/tokenizer"
+	"github.com/tzapio/tokenizer"
 )
 
 func main() {

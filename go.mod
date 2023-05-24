@@ -1,4 +1,4 @@
-module github.com/tiktoken-go/tokenizer
+module github.com/tzapio/tokenizer
 
 go 1.20
 

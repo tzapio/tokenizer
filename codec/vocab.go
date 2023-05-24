@@ -1,4 +1,4 @@
 package codec
 
-type vocab map[string]uint
-type reverse map[uint]string
+type Vocab map[string]uint
+type Reverse map[uint]string

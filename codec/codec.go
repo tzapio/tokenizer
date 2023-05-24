@@ -8,13 +8,18 @@ import (
 )
 
 type Codec struct {
-	vocabulary        vocab
-	reverseVocabulary reverse
-	specialTokens     map[string]uint
-	splitRegexp       *regexp2.Regexp
 	name              string
+	vocabulary        Vocab
+	reverseVocabulary Reverse
+	splitRegexp       *regexp2.Regexp
+	specialTokens     map[string]uint
 }
 
+func New(name string, vocabulary Vocab, splitRegexp *regexp2.Regexp, specialTokens map[string]uint) *Codec {
+	return &Codec{
+		name, vocabulary, nil, splitRegexp, specialTokens,
+	}
+}
 func (c *Codec) GetName() string {
 	return c.name
 }

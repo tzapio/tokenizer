@@ -74,7 +74,9 @@ package tokenizer
 import (
 	"errors"
 
-	"github.com/tiktoken-go/tokenizer/codec"
+	"github.com/tzapio/tokenizer/codec/cl100k_base"
+	"github.com/tzapio/tokenizer/codec/p50k_base"
+	"github.com/tzapio/tokenizer/codec/r50k_base"
 )
 
 var (
@@ -142,13 +144,13 @@ const (
 func Get(encoding Encoding) (Codec, error) {
 	switch encoding {
 	case Cl100kBase:
-		return codec.NewCl100kBase(), nil
+		return cl100k_base.NewCl100kBase(), nil
 	case R50kBase:
-		return codec.NewR50kBase(), nil
+		return r50k_base.NewR50kBase(), nil
 	case P50kBase:
-		return codec.NewP50kBase(), nil
+		return p50k_base.NewP50kBase(), nil
 	case P50kEdit:
-		return codec.NewP50kEdit(), nil
+		return p50k_base.NewP50kEdit(), nil
 	default:
 		return nil, ErrEncodingNotSupported
 	}

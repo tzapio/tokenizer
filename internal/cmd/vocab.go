@@ -13,10 +13,6 @@ import (
 	"strings"
 )
 
-const (
-	packageName = "codec"
-)
-
 type config struct {
 	url      string
 	mapName  string
@@ -45,7 +41,8 @@ func main() {
 }
 
 func generatePreable(w io.Writer, encoding string) {
-	fmt.Fprintf(w, "package %s\n", packageName)
+	fmt.Fprintf(w, "package %s\n", encoding)
+	fmt.Fprintf(w, "import \"github.com/tzapio/tokenizer/codec\"\n")
 	fmt.Fprintf(w, "//go:generate go run ../internal/cmd/vocab.go -encoding %s\n", encoding)
 	fmt.Fprintf(w, "// THIS FILE WAS AUTOMATICALLY GENERATED. DO NOT MODIFY\n")
 }
@@ -57,7 +54,7 @@ func genVocabulary(w io.Writer, mapName string, uri string) {
 	}
 	defer resp.Body.Close()
 
-	fmt.Fprintf(w, "var %s vocab = vocab{\n", mapName)
+	fmt.Fprintf(w, "var %s codec.Vocab = codec.Vocab{\n", mapName)
 
 	scanner := bufio.NewScanner(resp.Body)
 	for scanner.Scan() {
