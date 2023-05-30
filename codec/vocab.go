@@ -41,8 +41,8 @@ func SaveReverseToFile(filename string, reverse Reverse) {
 	}
 }
 func LoadVocabFromByteArr(data []byte) Vocab {
-	var vocab Vocab
-	decoder := gob.NewDecoder(bytes.NewBuffer(data))
+	var vocab Vocab = make(map[string]int32, 100300)
+	decoder := gob.NewDecoder(bytes.NewReader(data))
 	err := decoder.Decode(&vocab)
 	if err != nil {
 		log.Fatalf("Failed to deserialize data: %s", err)
@@ -52,8 +52,8 @@ func LoadVocabFromByteArr(data []byte) Vocab {
 }
 
 func LoadReverseFromByteArr(data []byte) Reverse {
-	var reverse Reverse
-	decoder := gob.NewDecoder(bytes.NewBuffer(data))
+	var reverse Reverse = make(map[int32]string, 100300)
+	decoder := gob.NewDecoder(bytes.NewReader(data))
 	err := decoder.Decode(&reverse)
 	if err != nil {
 		log.Fatalf("Failed to deserialize data: %s", err)
@@ -63,7 +63,7 @@ func LoadReverseFromByteArr(data []byte) Reverse {
 }
 
 func GetReverse(vocab Vocab) Reverse {
-	var reverse Reverse = make(map[int32]string)
+	var reverse Reverse = make(map[int32]string, len(vocab))
 	for k, v := range vocab {
 		reverse[v] = k
 	}
