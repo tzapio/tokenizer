@@ -12,21 +12,21 @@ type Codec struct {
 	vocabulary        Vocab
 	reverseVocabulary Reverse
 	splitRegexp       *regexp2.Regexp
-	specialTokens     map[string]uint
+	specialTokens     map[string]int32
 }
 
-func New(name string, vocabulary Vocab, splitRegexp *regexp2.Regexp, specialTokens map[string]uint) *Codec {
+func New(name string, vocabulary Vocab, reverse Reverse, splitRegexp *regexp2.Regexp, specialTokens map[string]int32) *Codec {
 	return &Codec{
-		name, vocabulary, nil, splitRegexp, specialTokens,
+		name, vocabulary, reverse, splitRegexp, specialTokens,
 	}
 }
 func (c *Codec) GetName() string {
 	return c.name
 }
 
-func (c *Codec) Encode(input string) ([]uint, []string, error) {
+func (c *Codec) Encode(input string) ([]int32, []string, error) {
 	var (
-		ids    []uint
+		ids    []int32
 		tokens []string
 	)
 	match, err := c.splitRegexp.FindStringMatch(input)
@@ -53,14 +53,7 @@ func (c *Codec) Encode(input string) ([]uint, []string, error) {
 	return ids, tokens, nil
 }
 
-func (c *Codec) Decode(tokens []uint) (string, error) {
-	if c.reverseVocabulary == nil {
-		c.reverseVocabulary = make(map[uint]string)
-		for k, v := range c.vocabulary {
-			c.reverseVocabulary[v] = k
-		}
-	}
-
+func (c *Codec) Decode(tokens []int32) (string, error) {
 	var out string
 	for _, t := range tokens {
 		piece, ok := c.reverseVocabulary[t]
@@ -72,30 +65,30 @@ func (c *Codec) Decode(tokens []uint) (string, error) {
 	return out, nil
 }
 
-func (c *Codec) bpe(piece []byte) ([]uint, []string) {
+func (c *Codec) bpe(piece []byte) ([]int32, []string) {
 	type part struct {
 		offset int
-		rank   uint
+		rank   int32
 	}
 
 	parts := make([]part, len(piece)+1)
 	for i := 0; i < len(parts); i++ {
-		parts[i] = part{i, math.MaxUint}
+		parts[i] = part{i, math.MaxInt32}
 	}
 
-	getRank := func(index, skip int) uint {
-		if index+skip+2 < len(parts) {
+	getRank := func(index int32, skip int32) int32 {
+		if int(index)+int(skip)+2 < len(parts) {
 			start := parts[index].offset
 			end := parts[index+skip+2].offset
 			if rank, ok := c.vocabulary[string(piece[start:end])]; ok {
 				return rank
 			}
 		}
-		return math.MaxUint
+		return math.MaxInt32
 	}
 
 	for i := 0; i < len(parts)-2; i++ {
-		parts[i].rank = getRank(i, 0)
+		parts[i].rank = getRank(int32(i), 0)
 	}
 
 	for {
@@ -103,16 +96,16 @@ func (c *Codec) bpe(piece []byte) ([]uint, []string) {
 			break
 		}
 
-		minRank := uint(math.MaxUint)
-		minIndex := 0
+		minRank := int32(math.MaxInt32)
+		minIndex := int32(0)
 		for i, p := range parts[:len(parts)-1] {
 			if p.rank < minRank {
 				minRank = p.rank
-				minIndex = i
+				minIndex = int32(i)
 			}
 		}
 
-		if minRank == math.MaxUint {
+		if minRank == math.MaxInt32 {
 			break
 		}
 
@@ -125,7 +118,7 @@ func (c *Codec) bpe(piece []byte) ([]uint, []string) {
 		parts = append(parts[:minIndex+1], parts[minIndex+2:]...)
 	}
 
-	ids := make([]uint, len(parts)-1)
+	ids := make([]int32, len(parts)-1)
 	tokens := make([]string, len(parts)-1)
 	for i := 0; i < len(ids); i++ {
 		token := string(piece[parts[i].offset:parts[i+1].offset])

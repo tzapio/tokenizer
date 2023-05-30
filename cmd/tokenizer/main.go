@@ -84,13 +84,13 @@ func encodeInput(codec tokenizer.Codec, text string, wantTokens bool) {
 }
 
 func decodeInput(codec tokenizer.Codec, tokens string) {
-	var ids []uint
+	var ids []int32
 	for _, t := range strings.Split(tokens, " ") {
 		id, err := strconv.Atoi(t)
 		if err != nil {
 			log.Fatalf("invalid token id: %s", t)
 		}
-		ids = append(ids, uint(id))
+		ids = append(ids, int32(id))
 	}
 
 	text, err := codec.Decode(ids)

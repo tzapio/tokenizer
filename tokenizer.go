@@ -75,8 +75,6 @@ import (
 	"errors"
 
 	"github.com/tzapio/tokenizer/codec/cl100k_base"
-	"github.com/tzapio/tokenizer/codec/p50k_base"
-	"github.com/tzapio/tokenizer/codec/r50k_base"
 )
 
 var (
@@ -86,8 +84,8 @@ var (
 
 type Codec interface {
 	GetName() string
-	Encode(string) ([]uint, []string, error)
-	Decode([]uint) (string, error)
+	Encode(string) ([]int32, []string, error)
+	Decode([]int32) (string, error)
 }
 
 type Model string
@@ -145,12 +143,6 @@ func Get(encoding Encoding) (Codec, error) {
 	switch encoding {
 	case Cl100kBase:
 		return cl100k_base.NewCl100kBase(), nil
-	case R50kBase:
-		return r50k_base.NewR50kBase(), nil
-	case P50kBase:
-		return p50k_base.NewP50kBase(), nil
-	case P50kEdit:
-		return p50k_base.NewP50kEdit(), nil
 	default:
 		return nil, ErrEncodingNotSupported
 	}
