@@ -1,10 +1,6 @@
-![Tests](https://github.com/tiktoken-go/tokenizer/actions/workflows/go.yml/badge.svg)
-
 # Tokenizer
 
 This is a pure go port of OpenAI's tokenizer.
-
-<a href="https://www.buymeacoffee.com/mwahlmann" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-blue.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 ## Usage
 
@@ -50,11 +46,11 @@ Usage of tokenizer:
 
 ## Todo
 
-- ✅ port code
+- ❌ port code
 - ✅ cl100k_base encoding
-- ✅ r50k_base encoding
-- ✅ p50k_base encoding
-- ✅ p50k_edit encoding
+- ❌ r50k_base encoding
+- ❌ p50k_base encoding
+- ❌ p50k_edit encoding
 - ✅ tests
 - ❌ handle special tokens
 - ❌ gpt-2 model
@@ -68,13 +64,5 @@ which downloads the dictionaries and puts them in a cache folder.
 However, since the dictionaries are compiled during the go build process
 the performance and start-up times should be better than downloading and loading
 them at runtime.
-
-## Alternatives
-
-Here is a list of other libraries that do something similar.
-
-- [https://github.com/sugarme/tokenizer](https://github.com/sugarme/tokenizer) (A different tokenizer algorithm than OpenAI's)
-- [https://github.com/pandodao/tokenizer-go](https://github.com/pandodao/tokenizer-go) (deprecated, calls into JavaScript)
-- [https://github.com/pkoukk/tiktoken-go](https://github.com/pkoukk/tiktoken-go)
 
 
